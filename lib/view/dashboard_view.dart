@@ -30,8 +30,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return OfflineBuilder(
-      connectivityBuilder: (BuildContext context, ConnectivityResult connectivity, Widget child) {
-        final bool connected = connectivity != ConnectivityResult.none;
+      connectivityBuilder: (BuildContext context, List<ConnectivityResult> connectivity, Widget child) {
+        final bool connected = connectivity.contains(ConnectivityResult.mobile) || connectivity.contains(ConnectivityResult.wifi);
         return Scaffold(
           appBar: AppBar(
             backgroundColor: const Color(0xFF008080),
