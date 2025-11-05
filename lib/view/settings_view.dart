@@ -7,19 +7,21 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1E5544),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Settings', style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF1E5544),
+        title: const Text('Settings', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black, // This sets the back arrow color
         elevation: 0,
       ),
       body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 10),
         children: const [
-          SizedBox(height: 20),
           SettingsListItem(
             icon: Icons.person_outline,
-            title: 'Profile',
+            title: 'User Name', // Changed from Profile to User Name
             subtitle: 'View or edit your profile details',
+            isHeader: true, 
           ),
           SettingsListItem(
             icon: Icons.lock_outline,
@@ -46,12 +48,14 @@ class SettingsListItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+  final bool isHeader;
 
   const SettingsListItem({
     super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.isHeader = false,
   });
 
   @override
@@ -63,8 +67,15 @@ class SettingsListItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
-        leading: Icon(icon, color: Colors.white),
-        title: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        leading: Icon(icon, color: Colors.white, size: isHeader ? 32 : 24),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: isHeader ? 18 : 16,
+          ),
+        ),
         subtitle: Text(subtitle, style: const TextStyle(color: Colors.white70)),
         trailing: const Icon(Icons.chevron_right, color: Colors.white),
         onTap: () {
