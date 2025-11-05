@@ -50,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
+              color: const Color.fromRGBO(0, 0, 0, 0.1),
             )
           ],
         ),
