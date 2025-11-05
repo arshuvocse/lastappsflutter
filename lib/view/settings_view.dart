@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:myapp/widgets/settings_list_item.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -73,48 +74,6 @@ class SettingsView extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-}
-
-class SettingsListItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final bool isHeader;
-  final VoidCallback? onTap;
-
-  const SettingsListItem({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    this.isHeader = false,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2B6F5C),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: Colors.white, size: isHeader ? 32 : 24),
-        title: Text(
-          title,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: isHeader ? 18 : 16,
-          ),
-        ),
-        subtitle: Text(subtitle, style: const TextStyle(color: Colors.white70)),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white),
-        onTap: onTap,
-      ),
     );
   }
 }
