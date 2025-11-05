@@ -4,11 +4,13 @@ import '../data/database_helper.dart';
 import '../model/user_model.dart';
 
 class LoginViewModel with ChangeNotifier {
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _loading = false;
   String? _errorMessage;
 
+  TextEditingController get usernameController => _usernameController;
   TextEditingController get emailController => _emailController;
   TextEditingController get passwordController => _passwordController;
   bool get loading => _loading;
@@ -22,11 +24,12 @@ class LoginViewModel with ChangeNotifier {
     // Simulate a network request
     await Future.delayed(const Duration(seconds: 2));
 
-    if (_emailController.text == 'Demo' &&
+    if (_usernameController.text == 'Demo' &&
         _passwordController.text == '1234') {
       _errorMessage = null;
       // Save user to database
       await DatabaseHelper().saveUser(User(
+        username: _usernameController.text,
         email: _emailController.text,
         password: _passwordController.text,
       ));
@@ -34,7 +37,7 @@ class LoginViewModel with ChangeNotifier {
       notifyListeners();
       return true;
     } else {
-      _errorMessage = 'Invalid email or password';
+      _errorMessage = 'Invalid username or password';
       _loading = false;
       notifyListeners();
       return false;

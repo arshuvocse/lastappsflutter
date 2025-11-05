@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/view/approval_view.dart';
+import 'package:myapp/view/settings_view.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -16,7 +17,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     const HomeScreen(),
     const ApprovalScreen(),
     const ReportsScreen(),
-    const SettingsScreen(),
+    const SettingsView(),
   ];
 
   void _onItemTapped(int index) {
@@ -202,44 +203,6 @@ class ReportsScreen extends StatelessWidget {
                 // Handle report tap
               },
             ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> settings = [
-      {'title': 'Profile', 'icon': Icons.person_outline},
-      {'title': 'Change Password', 'icon': Icons.lock_outline},
-      {'title': 'Notifications', 'icon': Icons.notifications_outlined},
-      {'title': 'Language', 'icon': Icons.language_outlined},
-      {'title': 'Logout', 'icon': Icons.exit_to_app, 'color': Colors.red},
-    ];
-
-    return Container(
-      color: const Color(0xFFF0F4F8),
-      child: ListView.separated(
-        itemCount: settings.length,
-        separatorBuilder: (context, index) => const Divider(height: 1),
-        itemBuilder: (context, index) {
-          final item = settings[index];
-          final color = item['color'] ?? const Color(0xFF008080);
-          return ListTile(
-            leading: Icon(item['icon'], color: color),
-            title: Text(item['title'], style: TextStyle(fontWeight: FontWeight.w500, color: item['color'] ?? Colors.black87)),
-            trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () {
-               if (item['title'] == 'Logout') {
-                 GoRouter.of(context).go('/');
-              }
-            },
           );
         },
       ),
