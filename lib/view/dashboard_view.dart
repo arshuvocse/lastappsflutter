@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:myapp/view/approval_view.dart';
 import 'package:myapp/view/settings_view.dart';
@@ -28,69 +29,89 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF008080),
-        title: Text(_getAppBarTitle(), style: const TextStyle(color: Colors.white)),
-        leading: _selectedIndex != 0
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 0;
-                  });
-                },
-              )
-            : null,
-      ),
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: const Color.fromRGBO(0, 0, 0, 0.1),
-            )
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
-              gap: 8,
-              activeColor: Colors.white,
-              iconSize: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: const Duration(milliseconds: 400),
-              tabBackgroundColor: const Color(0xFF008080),
-              color: Colors.black,
-              tabs: const [
-                GButton(
-                  icon: Icons.home,
-                  text: 'Home',
-                ),
-                GButton(
-                  icon: Icons.approval,
-                  text: 'Approval',
-                ),
-                GButton(
-                  icon: Icons.bar_chart,
-                  text: 'Reports',
-                ),
-                GButton(
-                  icon: Icons.settings,
-                  text: 'Settings',
-                ),
+    return OfflineBuilder(
+      connectivityBuilder: (BuildContext context, ConnectivityResult connectivity, Widget child) {
+        final bool connected = connectivity != ConnectivityResult.none;
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color(0xFF008080),
+            title: Text(_getAppBarTitle(), style: const TextStyle(color: Colors.white)),
+            leading: _selectedIndex != 0
+                ? IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      setState(() {
+                        _selectedIndex = 0;
+                      });
+                    },
+                  )
+                : null,
+            bottom: !connected
+                ? PreferredSize(
+                    preferredSize: const Size.fromHeight(30.0),
+                    child: Container(
+                      color: Colors.red,
+                      child: const Center(
+                        child: Text(
+                          'No internet connection',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  )
+                : null,
+          ),
+          body: _screens[_selectedIndex],
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 20,
+                  color: const Color.fromRGBO(0, 0, 0, 0.1),
+                )
               ],
-              selectedIndex: _selectedIndex,
-              onTabChange: _onItemTapped,
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                child: GNav(
+                  rippleColor: Colors.grey[300]!,
+                  hoverColor: Colors.grey[100]!,
+                  gap: 8,
+                  activeColor: Colors.white,
+                  iconSize: 24,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  duration: const Duration(milliseconds: 400),
+                  tabBackgroundColor: const Color(0xFF008080),
+                  color: Colors.black,
+                  tabs: const [
+                    GButton(
+                      icon: Icons.home,
+                      text: 'Home',
+                    ),
+                    GButton(
+                      icon: Icons.approval,
+                      text: 'Approval',
+                    ),
+                    GButton(
+                      icon: Icons.bar_chart,
+                      text: 'Reports',
+                    ),
+                    GButton(
+                      icon: Icons.settings,
+                      text: 'Settings',
+                    ),
+                  ],
+                  selectedIndex: _selectedIndex,
+                  onTabChange: _onItemTapped,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
+      child: const Center(child: Text('No internet connection')),
     );
   }
 
