@@ -10,7 +10,6 @@ class SettingsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Settings', style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black, // This sets the back arrow color
         elevation: 0,

@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/widgets/settings_list_item.dart';
 
-class ReportsScreen extends StatelessWidget {
-  const ReportsScreen({super.key});
+class ReportsView extends StatelessWidget {
+  const ReportsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,21 +19,27 @@ class ReportsScreen extends StatelessWidget {
             onTap: () {},
           ),
           SettingsListItem(
-            icon: Icons.timeline,
-            title: 'Activity Report',
-            subtitle: 'Track user and system activity',
+            icon: Icons.pie_chart,
+            title: 'Expense Report',
+            subtitle: 'Track and manage business expenses',
             onTap: () {},
           ),
           SettingsListItem(
-            icon: Icons.inventory,
-            title: 'Inventory Report',
-            subtitle: 'Check stock levels and inventory status',
-            onTap: () {},
-          ),
-          SettingsListItem(
-            icon: Icons.star_border,
+            icon: Icons.trending_up,
             title: 'Performance Report',
-            subtitle: 'Review team and individual performance',
+            subtitle: 'Monitor and evaluate team performance',
+            onTap: () {},
+          ),
+          SettingsListItem(
+            icon: Icons.inventory_2_outlined,
+            title: 'Inventory Report',
+            subtitle: 'Keep track of stock and inventory levels',
+            onTap: () {},
+          ),
+          SettingsListItem(
+            icon: Icons.summarize_outlined,
+            title: 'Summary Report',
+            subtitle: 'Get a comprehensive overview of all activities',
             onTap: () {},
           ),
         ],
