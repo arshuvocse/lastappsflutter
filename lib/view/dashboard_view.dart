@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_offline/flutter_offline.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:myapp/view/approval_view.dart';
+import 'package:myapp/view/reports_view.dart';
 import 'package:myapp/view/settings_view.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -14,12 +16,27 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
+  bool _isLocationEnabled = true;
+
   final List<Widget> _screens = [
     const HomeScreen(),
     const ApprovalScreen(),
-    const ReportsScreen(),
+    const ReportsView(),
     const SettingsView(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLocationStatus();
+  }
+
+  Future<void> _checkLocationStatus() async {
+    final status = await Geolocator.isLocationServiceEnabled();
+    setState(() {
+      _isLocationEnabled = status;
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -30,12 +47,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return OfflineBuilder(
-      connectivityBuilder: (BuildContext context, List<ConnectivityResult> connectivity, Widget child) {
-        final bool connected = connectivity.contains(ConnectivityResult.mobile) || connectivity.contains(ConnectivityResult.wifi);
+      connectivityBuilder: (BuildContext context,
+          List<ConnectivityResult> connectivity, Widget child) {
+        final bool connected = connectivity.contains(ConnectivityResult.mobile) ||
+            connectivity.contains(ConnectivityResult.wifi);
         return Scaffold(
           appBar: AppBar(
             backgroundColor: const Color(0xFF008080),
-            title: Text(_getAppBarTitle(), style: const TextStyle(color: Colors.white)),
+            title:
+                Text(_getAppBarTitle(), style: const TextStyle(color: Colors.white)),
             leading: _selectedIndex != 0
                 ? IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -46,17 +66,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                   )
                 : null,
-            bottom: !connected
+            bottom: !connected || !_isLocationEnabled
                 ? PreferredSize(
-                    preferredSize: const Size.fromHeight(30.0),
-                    child: Container(
-                      color: Colors.red,
-                      child: const Center(
-                        child: Text(
-                          'No internet connection',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
+                    preferredSize: const Size.fromHeight(40.0),
+                    child: Column(
+                      children: [
+                        if (!connected)
+                          Container(
+                            color: Colors.amber,
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.warning, color: Colors.black, size: 20),
+                                SizedBox(width: 8),
+                                Text(
+                                  'No internet connection. Please check your network.',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (!_isLocationEnabled)
+                          GestureDetector(
+                            onTap: () async {
+                              await Geolocator.openLocationSettings();
+                            },
+                            child: Container(
+                              color: Colors.red,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(8.0),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.location_off,
+                                      color: Colors.white, size: 20),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Your location is off. Please turn it on.',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   )
                 : null,
@@ -74,14 +129,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
                 child: GNav(
                   rippleColor: Colors.grey[300]!,
                   hoverColor: Colors.grey[100]!,
                   gap: 8,
                   activeColor: Colors.white,
                   iconSize: 24,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   duration: const Duration(milliseconds: 400),
                   tabBackgroundColor: const Color(0xFF008080),
                   color: Colors.black,
@@ -214,41 +271,6 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ReportsScreen extends StatelessWidget {
-  const ReportsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> reports = [
-      {'title': 'Daily Report', 'icon': Icons.today},
-      {'title': 'Weekly Report', 'icon': Icons.calendar_view_week},
-      {'title': 'Monthly Report', 'icon': Icons.calendar_month},
-      {'title': 'Custom Report', 'icon': Icons.insert_chart_outlined},
-    ];
-
-    return Container(
-      color: const Color(0xFFF0F4F8),
-      child: ListView.builder(
-        itemCount: reports.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: ListTile(
-              leading: Icon(reports[index]['icon'], color: const Color(0xFF008080)),
-              title: Text(reports[index]['title'], style: const TextStyle(fontWeight: FontWeight.w500)),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // Handle report tap
-              },
-            ),
-          );
-        },
       ),
     );
   }
